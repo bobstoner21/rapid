@@ -968,8 +968,13 @@ function qa(num, question, ans) {
     return "[B]" + num + "[/B] " + escapeBBCode(question) + " — [B]" + ans + "[/B]\n";
 }
 
+const SECTION_OPEN  = "[size=3][indent][font=Arial][color=black]";
+const SECTION_CLOSE = "[/color][/font][/indent][/size]\n[/bg]\n\n";
+
+/* чёрная плашка с заголовком раздела + начало белого блока с текстом */
 function heading(text) {
-    return "[HEADING=2]" + text + "[/HEADING]\n";
+    return "[block=black][indent][font=Arial Black][color=white]" + text +
+           "[/color][/font][/indent][/block][bg=white]\n" + SECTION_OPEN;
 }
 
 function generateBBCode() {
@@ -978,17 +983,11 @@ function generateBBCode() {
 
     generateTopicTitle();
 
-    /* HEADER */
-    b += "[CENTER]\n";
-    b += "[SIZE=6][B]RAPID[/B][/SIZE]\n";
-    b += "[SIZE=4][B]ЗАЯВЛЕНИЕ НА ВСТУПЛЕНИЕ[/B][/SIZE]\n";
-    b += "[/CENTER]\n";
-    b += "[HR][/HR]\n\n";
-
-    /* NAME */
-    b += "[CENTER]\n";
-    b += "[SIZE=5][B]" + escapeBBCode(value("fullname")) + "[/B][/SIZE]\n";
-    b += "[/CENTER]\n\n";
+    /* HEADER + NAME */
+    b += "[box=white][color=black][indent][font=Arial Black][b]ЗАЯВЛЕНИЕ НА ВСТУПЛЕНИЕ\n";
+    b += "RAPID[/b][/font]\n";
+    b += "[hr][/hr]";
+    b += "[font=Arial Black][indent][b]" + escapeBBCode(value("fullname")) + "[/b][/indent][/font]\n\n";
 
 
     /* I. PERSONAL */
@@ -1013,7 +1012,7 @@ function generateBBCode() {
         b += row((i + 1) + ".", r[0], value(r[1]));
     });
 
-    b += "\n";
+    b += SECTION_CLOSE;
 
 
     /* II. EDUCATION */
@@ -1031,7 +1030,7 @@ function generateBBCode() {
 
     b += "[B]3.[/B] Служба в Вооружённых силах США — [B]" + militaryText + "[/B]\n";
 
-    b += "\n";
+    b += SECTION_CLOSE;
 
 
     /* III. LEGAL */
@@ -1041,7 +1040,7 @@ function generateBBCode() {
         b += qa((index + 1) + ".", question, answer("legal_" + index));
     });
 
-    b += "\n";
+    b += SECTION_CLOSE;
 
 
     /* IV. OOC */
@@ -1074,12 +1073,19 @@ function generateBBCode() {
     b += "[QUOTE]" + escapeBBCode(value("lkscreen")) + "[/QUOTE]\n";
 
     b += "[B]5.[/B] Скриншот двухфакторной защиты (gambit-rp.com/settings):\n";
-    b += "[QUOTE]" + escapeBBCode(value("twofa")) + "[/QUOTE]\n\n";
+    b += "[QUOTE]" + escapeBBCode(value("twofa")) + "[/QUOTE]\n";
+
+    b += SECTION_CLOSE;
 
 
     /* V. BACKSTORY */
     b += heading("V. КВЕНТА ПЕРСОНАЖА");
     b += escapeBBCode(value("backstory")) + "\n";
+
+    b += SECTION_CLOSE.replace(/\n\n$/, "\n");
+
+    /* закрываем общий контейнер */
+    b += "[/indent][/color][/box]\n";
 
     document.getElementById("bbcode").value = b;
 
