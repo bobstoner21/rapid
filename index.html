@@ -972,6 +972,23 @@ function generateTopicTitle() {
    GENERATE BBCODE
 ========================================================= */
 
+/* убирает пустые и повторяющиеся строки (например, одинаковые ссылки) */
+function uniqueLines(text) {
+
+    const seen = new Set();
+
+    return String(text || "")
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => {
+            if (!line || seen.has(line)) return false;
+            seen.add(line);
+            return true;
+        })
+        .join("\n");
+
+}
+
 function row(num, label, text) {
     /* многострочные ответы (например, список ссылок) идут с новой строки */
     const sep = String(text).includes("\n") ? ":\n" : ": ";
@@ -1001,8 +1018,7 @@ function generateBBCode() {
     b += "[box=white][color=black][indent]\n";
     b += "[center][img width=\"130px\" height=\"130px\"]https://i.imgur.com/tJxXQFt.png[/img][/center]\n\n";
     b += "[center][font=Arial Black][size=5][b]ПРОГРАММА УСКОРЕННОЙ ИНТЕГРАЦИИ[/b][/size][/font][/center]\n";
-    b += "[hr][/hr]";
-    b += "[center][font=Arial Black][size=4][b]" + escapeBBCode(value("fullname")) + "[/b][/size][/font][/center]\n\n";
+    b += "[hr][/hr]\n\n";
 
 
     /* I. PERSONAL */
@@ -1079,7 +1095,7 @@ function generateBBCode() {
     b += qa("1.", oocQuestions[0].replace("*", ""), answer("ooc_0"));
 
     b += row("2.", "Опыт игры в PD/SD на Gambit RP", value("pdexp"));
-    b += row("3.", "Портфолио СС", value("portfolio"));
+    b += row("3.", "Портфолио СС", uniqueLines(value("portfolio")));
     b += row("4.", "Скриншот личного кабинета (gambit-rp.com/profile)", value("lkscreen"));
     b += row("5.", "Скриншот двухфакторной защиты (gambit-rp.com/settings)", value("twofa"));
 
