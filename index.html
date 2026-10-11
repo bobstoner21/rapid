@@ -918,6 +918,18 @@ function updateProgress() {
 
 document.addEventListener("input", updateProgress);
 
+/* текстовые поля растут по мере ввода, чтобы было видно весь текст */
+document.addEventListener("input", event => {
+
+    const el = event.target;
+
+    if (el.tagName === "TEXTAREA" && el.id !== "bbcode") {
+        el.style.height = "auto";
+        el.style.height = el.scrollHeight + 2 + "px";
+    }
+
+});
+
 function updateBackstoryCounter() {
 
     const len = value("backstory").length;
@@ -961,7 +973,9 @@ function generateTopicTitle() {
 ========================================================= */
 
 function row(num, label, text) {
-    return "[B]" + num + "[/B] " + label + ": " + escapeBBCode(text) + "\n";
+    /* многострочные ответы (например, список ссылок) идут с новой строки */
+    const sep = String(text).includes("\n") ? ":\n" : ": ";
+    return "[B]" + num + "[/B] " + label + sep + escapeBBCode(text) + "\n";
 }
 
 function qa(num, question, ans) {
@@ -986,8 +1000,7 @@ function generateBBCode() {
     /* HEADER + NAME */
     b += "[box=white][color=black][indent]\n";
     b += "[center][img width=\"130px\" height=\"130px\"]https://i.imgur.com/tJxXQFt.png[/img][/center]\n\n";
-    b += "[center][font=Arial Black][size=5][b]ПРОГРАММА УСКОРЕННОЙ ИНТЕГРАЦИИ[/b][/size]\n";
-    b += "[size=4][b](RAPID)[/b][/size][/font][/center]\n";
+    b += "[center][font=Arial Black][size=5][b]ПРОГРАММА УСКОРЕННОЙ ИНТЕГРАЦИИ[/b][/size][/font][/center]\n";
     b += "[hr][/hr]";
     b += "[center][font=Arial Black][size=4][b]" + escapeBBCode(value("fullname")) + "[/b][/size][/font][/center]\n\n";
 
@@ -1137,6 +1150,10 @@ function resetForm() {
 
     document.getElementById("bbcode").value = "";
     document.getElementById("topicTitle").value = "";
+
+    document.querySelectorAll("textarea").forEach(el => {
+        if (el.id !== "bbcode") el.style.height = "";
+    });
 
     updateBackstoryCounter();
     showStep(1);
