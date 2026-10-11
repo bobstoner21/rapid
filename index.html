@@ -984,7 +984,9 @@ function generateBBCode() {
     generateTopicTitle();
 
     /* HEADER + NAME */
-    b += "[box=white][color=black][indent][font=Arial Black][b]ЗАЯВЛЕНИЕ НА ВСТУПЛЕНИЕ\n";
+    b += "[box=white][color=black][indent]\n";
+    b += "[center][img width=\"130px\" height=\"130px\"]https://i.imgur.com/tJxXQFt.png[/img][/center]\n\n";
+    b += "[font=Arial Black][b]ЗАЯВЛЕНИЕ НА ВСТУПЛЕНИЕ\n";
     b += "RAPID[/b][/font]\n";
     b += "[hr][/hr]";
     b += "[font=Arial Black][indent][b]" + escapeBBCode(value("fullname")) + "[/b][/indent][/font]\n\n";
@@ -1063,17 +1065,10 @@ function generateBBCode() {
 
     b += qa("1.", oocQuestions[0].replace("*", ""), answer("ooc_0"));
 
-    b += "[B]2.[/B] Опыт игры в PD/SD на Gambit RP:\n";
-    b += "[QUOTE]" + escapeBBCode(value("pdexp")) + "[/QUOTE]\n";
-
-    b += "[B]3.[/B] Портфолио СС:\n";
-    b += "[QUOTE]" + escapeBBCode(value("portfolio")) + "[/QUOTE]\n";
-
-    b += "[B]4.[/B] Скриншот личного кабинета (gambit-rp.com/profile):\n";
-    b += "[QUOTE]" + escapeBBCode(value("lkscreen")) + "[/QUOTE]\n";
-
-    b += "[B]5.[/B] Скриншот двухфакторной защиты (gambit-rp.com/settings):\n";
-    b += "[QUOTE]" + escapeBBCode(value("twofa")) + "[/QUOTE]\n";
+    b += row("2.", "Опыт игры в PD/SD на Gambit RP", value("pdexp"));
+    b += row("3.", "Портфолио СС", value("portfolio"));
+    b += row("4.", "Скриншот личного кабинета (gambit-rp.com/profile)", value("lkscreen"));
+    b += row("5.", "Скриншот двухфакторной защиты (gambit-rp.com/settings)", value("twofa"));
 
     b += SECTION_CLOSE;
 
